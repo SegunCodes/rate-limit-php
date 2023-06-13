@@ -38,7 +38,7 @@ function rateLimit($maxRequests, $timeWindow) {
     }
 
     // Proceed with normal execution if rate limit is not exceeded
-    echo "Request processed successfully.";
+    echo "IP endpoint processed successfully.";
 }
 
 // Endpoint-based rate limiting
@@ -70,9 +70,11 @@ function endpointRateLimit($maxRequests, $timeWindow)
         echo 'Endpoint limit exceeded. Please try again later.';
         exit;
     }
+    // Proceed with normal execution if rate limit is not exceeded
+    echo "endpoint processed successfully.";
 }
 
-// Global rate limiting using Redis
+// // Global rate limiting using Redis
 function globalRateLimit($maxRequests, $timeWindow) {
     global $redis;
 
@@ -101,17 +103,16 @@ function globalRateLimit($maxRequests, $timeWindow) {
     }
 
     // Proceed with normal execution if rate limit is not exceeded
-    echo "Request processed successfully.";
+    echo "global endpoint processed successfully.";
 }
 
 // Usage example: Global rate limit to 1000 requests per hour
-globalRateLimit(1000, 3600);
+globalRateLimit(3, 3600);
 
 // Usage example: Rate limit to 100 requests per minute
-rateLimit(100, 60);
+rateLimit(10, 60);
 
-// Usage example with endpoint "/api/endpoint1"
 endpointRateLimit(10, 60);
 // Perform actions for the endpoint if rate limit is not exceeded
-echo 'Endpoint 1 response';
+// echo 'Endpoint 1 response';
 ?>
