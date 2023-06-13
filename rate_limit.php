@@ -72,11 +72,6 @@ function endpointRateLimit($maxRequests, $timeWindow)
     }
 }
 
-
-require 'vendor/autoload.php';
-
-use Predis\Client;
-
 // Global rate limiting using Redis
 function globalRateLimit($maxRequests, $timeWindow) {
     global $redis;
