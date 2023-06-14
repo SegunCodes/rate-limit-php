@@ -31,7 +31,11 @@ function rateLimit($maxRequests, $timeWindow) {
 
     // Check if the request count exceeds the maximum allowed requests
     if ($requestCount > $maxRequests) {
-        // Perform actions for rate limit exceeded, such as returning an error response or delaying the request
+        if ($redis->ttl($key) === -1) {
+            // Reset the request count and set a new expiration time
+            $redis->set($key, 1, 'ex', $timeWindow * 60); // Convert minutes to seconds
+            $redis->expire($key, $timeWindow);
+        }
         http_response_code(429); // 429 Too Many Requests
         echo "Rate limit exceeded. Please try again later.";
         exit;
@@ -66,6 +70,12 @@ function endpointRateLimit($maxRequests, $timeWindow)
 
     // Check if the request count exceeds the maximum allowed requests
     if ($requestCount >= $maxRequests) {
+        // Check if the key has already expired
+        if ($redis->ttl($key) === -1) {
+            // Reset the request count and set a new expiration time
+            $redis->set($key, 1, 'ex', $timeWindow * 60); // Convert minutes to seconds
+            $redis->expire($key, $timeWindow);
+        }
         http_response_code(429); // 429 Too Many Requests
         echo 'Endpoint limit exceeded. Please try again later.';
         exit;
@@ -96,7 +106,11 @@ function globalRateLimit($maxRequests, $timeWindow) {
 
     // Check if the request count exceeds the maximum allowed requests
     if ($requestCount > $maxRequests) {
-        // Perform actions for rate limit exceeded, such as returning an error response or delaying the request
+        if ($redis->ttl($key) === -1) {
+            // Reset the request count and set a new expiration time
+            $redis->set($key, 1, 'ex', $timeWindow * 60); // Convert minutes to seconds
+            $redis->expire($key, $timeWindow);
+        }
         http_response_code(429); // 429 Too Many Requests
         echo "Rate limit exceeded. Please try again later.";
         exit;
